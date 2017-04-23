@@ -168,6 +168,7 @@ tag_summ<-comb %>% group_by(tag_formatted) %>% summarize(
   articles = n()
   ,sum_diff=sum(median_difference)
   ,median_diff=median(median_difference)
+  ,mean_diff=mean(median_difference)
 )
 
 head(tag_summ)
@@ -176,52 +177,53 @@ head(tag_summ)
 tag_summ<-tag_summ[tag_summ$articles>=100,]
 
 #TOP TAGS
-top<-tag_summ[order(tag_summ$median_diff,decreasing=TRUE),][1:40,]
-
+top<-tag_summ[order(tag_summ$mean_diff,decreasing=TRUE),][1:40,]
+head(top)
 ggplot(data = top,
-       aes(x=articles, y=median_diff)) +
+       aes(x=articles, y=mean_diff)) +
   geom_point(color="#00BA38",size=4) +
   geom_text_repel(data=top, aes(label=tag_formatted)
                   ,color="gray18"
                   ,size=7
                   ,segment.color = '#cccccc'
-                  ,point.padding = unit(1.2, 'lines')
+                  ,point.padding = unit(1.1, 'lines')
                   # Width of the line segments.
                   ,segment.size = 0.5
-                  ) +
+  ) +
   xlab("Total Posts") +
-  ylab("Median Views Above Expected") +
-  ggtitle("Top 40 Tags by Median Views Above Expected (Min. 100 Posts)") +
+  ylab("Average Views Above Expected") +
+  ggtitle("Top 40 Tags by Average Views Above Expected (Min. 100 Posts)") +
   scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)
-                     ,limits=c(0,1200),breaks=seq(0,1200,by=200)) +
+                     ,limits=c(0,800),breaks=seq(0,800,by=200)) +
   scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)
-                     ,limits=c(-6000,125000),breaks=seq(0,125000,by=25000)) +
+                     ,limits=c(-6000,170000),breaks=seq(0,170000,by=25000)) +
   theme(text = element_text(size = 35,family="Trebuchet MS")
         ,axis.title.y=element_text(margin=margin(0,10,0,0)) 
         ,axis.title.x=element_text(margin=margin(10,0,0,0))
-        ) 
+  ) 
+top[top$articles==max(top$articles),]
 
 #BOTTOM TAGS
-bottom<-tag_summ[order(tag_summ$median_diff),][1:40,]
+bottom<-tag_summ[order(tag_summ$mean_diff),][1:40,]
 head(bottom)
 ggplot(data = bottom,
-       aes(x=articles, y=median_diff)) +
+       aes(x=articles, y=mean_diff)) +
   geom_point(color="#F8766D",size=4) +
   geom_text_repel(data=bottom, aes(label=tag_formatted)
                   ,color="gray18"
                   ,size=7
                   ,segment.color = '#cccccc'
-                  ,point.padding = unit(1.2, 'lines')
+                  ,point.padding = unit(1.1, 'lines')
                   # Width of the line segments.
                   ,segment.size = 0.5
   ) +
   xlab("Total Posts") +
-  ylab("Median Views Above Expected") +
-  ggtitle("Bottom 40 Tags by Median Views Above Expected (Min. 100 Posts)") +
+  ylab("Average Views Above Expected") +
+  ggtitle("Bottom 40 Tags by Average Views Above Expected (Min. 100 Posts)") +
   scale_x_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)
-                     ,limits=c(0,2400),breaks=seq(0,2400,by=200)) +
+                     ,limits=c(-100,2400),breaks=seq(0,2400,by=200)) +
   scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)
-                     ,limits=c(-40000,1000),breaks=seq(-40000,0,by=10000)) +
+                     ,limits=c(-40000,10000),breaks=seq(-40000,10000,by=10000)) +
   theme(text = element_text(size = 35,family="Trebuchet MS")
         ,axis.title.y=element_text(margin=margin(0,10,0,0)) 
         ,axis.title.x=element_text(margin=margin(10,0,0,0))
