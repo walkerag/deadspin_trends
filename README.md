@@ -1,4 +1,4 @@
-# Deadspin Trend
+# Deadspin Trends
 
 Analyzing viral content using R and data from the sports blog Deadspin.com
 
